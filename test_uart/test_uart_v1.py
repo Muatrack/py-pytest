@@ -12,3 +12,4 @@ def test_uart_write():
 @pytest.mark.uart
 def test_uart_read():
     print("I am pstest tcase, uart modules: test_uart_read()")
+
