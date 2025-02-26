@@ -1,4 +1,11 @@
-pytest==8.3.4
-pytest-yaml==1.2.1
-requests==2.32.3
-response==0.5.0
+requests
+allure-pytest
+pytest
+pytest-result-log
+pytest-yaml-sanmu
+pytest-rerunfailures
+pytest-xdist
+pytest-order
+jsonpath
+rsa
+pymysql
