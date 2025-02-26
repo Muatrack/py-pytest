@@ -1,24 +1,25 @@
 import pytest
 import requests
-# import response
+import responses_validator
 
-class Http:
-    def connect(self):
-        print("conn http conn")
-
-    def response_cb_set(selv):
-        print("set http resp cb")
-
-    def close(self):
-        print("close http conn")
-    
-@pytest.fixture()
-def httpObj() -> object:
-    return "http class object"
-
-# @pytest.mark.usefixtures('httpObj')
 @pytest.fixture(scope='module')
 def http_fixture_module() -> any :
-    print("\n[ Gonna open http connection ] --------------- str:", httpObj)    
+    print("\n[ Gonna open http ] ---------------")
     yield
-    print("\n[ Close http connection ] ---------------")
+    print("\n[ Close http conn ] ---------------")
+
+
+def pytest_yaml_run_step(item):
+    print("\nxxxxxxxxxxxxxxxxx Yaml testcases xxxxxxxxxxxxxxxx ")
+    step = item.current_step
+    request = step.get('request')
+    response = step.get('response')
+
+    if request:
+        print(f'url={request["url"]}')
+        item.resp = requests.request(**request)
+
+    if response:
+        responses_validator.validator(item.resp, **response)
+
+    return True
