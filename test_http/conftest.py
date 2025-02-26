@@ -8,10 +8,12 @@ def http_fixture_module() -> any :
     yield
     print("\n[ Close http conn ] ---------------")
 
-
+@pytest.mark.api
+@pytest.mark.usefixtures('http_fixture_module')
 def pytest_yaml_run_step(item):
-    print("\nxxxxxxxxxxxxxxxxx Yaml testcases xxxxxxxxxxxxxxxx ")
+    print("\nyaml item:", item)
     step = item.current_step
+    print("yaml steps:", step)
     request = step.get('request')
     response = step.get('response')
 

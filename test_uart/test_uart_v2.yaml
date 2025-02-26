@@ -1,10 +1,18 @@
-name: fetch baidu # Each test case has a name
-steps:                 # Each test case has multiple steps
+name: 日志-开启
+steps:
 
-  - request:           # steps 1: send request
-      method: get
-      url: https://www.baidu.com
+  - conf:
+      port: /dev/ttyUSB0        # 端口号
+      baudrate: 115200          # 波特率
+      databits: 8               # 数据位
+      parity: None              # 校验方式
+      stopbits: 1               # 停止位的数量
+      flowctl: None             # 流空方式
 
-  - response:          # steps 2: assert response
-      status_code: 200
-      text: "*baidu*"
+  - send:
+      datatype: str             # 数据类型 str:字符串， hex：16进制
+      dataval: "AT+LOG=on"      # 数据值
+      timeout: 100              # 超时时长 (ms)
+
+  - recv:
+       dataval: "OK"            # 期待接收的字串
