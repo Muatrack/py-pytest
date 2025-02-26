@@ -3,4 +3,3 @@ steps:
     - a: 1
       b: 223
       c: 3332
-type: testcase
