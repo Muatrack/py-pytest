@@ -1,5 +1,6 @@
 requests
 responses_validator
+websockets
 allure-pytest
 pytest
 pytest-result-log
@@ -7,6 +8,7 @@ pytest-yaml-sanmu
 pytest-rerunfailures
 pytest-xdist
 pytest-order
+pytest-asyncio
 jsonpath
 rsa
 pymysql
