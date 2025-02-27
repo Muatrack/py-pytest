@@ -1,13 +1,15 @@
 
 # 电力网关 /server:  curl -i -H 'cookie: auth_key=Basic ZXNwMzI6NjY2ODg4' http://192.168.31.30/server
 
-name: fetch baidu # Each test case has a name
+name: elcgw # Each test case has a name
 steps:                 # Each test case has multiple steps
 
   - request:           # steps 1: send request
       method: get
-      url: http://192.168.31.30
+      url: http://192.168.31.30/server
+      headers: 
+        cookie: 'auth_key=Basic ZXNwMzI6NjY2ODg4'
 
   - response:          # steps 2: assert response
       status_code: 200
-      text: "*baidu*"
+      text: "*ws_state*"
