@@ -6,7 +6,7 @@ steps:                 # Each test case has multiple steps
 
   - request:           # steps 1: send request
       method: get
-      url: http://192.168.31.30/server
+      url: http://192.168.20.1/server
       headers: 
         cookie: 'auth_key=Basic ZXNwMzI6NjY2ODg4'
 
