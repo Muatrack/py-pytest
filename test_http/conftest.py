@@ -8,7 +8,7 @@ def http_fixture_module() -> any :
     yield
     print("\n[ Close http conn ] ---------------")
 
-@pytest.fixture(scope='module')
+# @pytest.fixture(scope='module')
 def pytest_yaml_run_step(item):
     step = item.current_step
     request = step.get('request')
