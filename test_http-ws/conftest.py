@@ -17,6 +17,7 @@ async def ws_perform(item):
     async with ws.connect(item.uri) as c:
         await send_msg(c, item)
 
+@pytest.fixture(scope='module')
 def pytest_yaml_run_step(item):
     step = item.current_step
     request = step.get('request')

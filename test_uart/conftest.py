@@ -9,7 +9,7 @@ def uart_fixture_module() -> any :
     print("\n[ Close uart port ] ---------------")
 
 
-def pytest_yaml_run_step(item):
+def stop_pytest_yaml_run_step(item):
     print("\nxxxxxxxxxxxxxxxxx Yaml testcases xxxxxxxxxxxxxxxx ")
     step = item.current_step
     request = step.get('request')

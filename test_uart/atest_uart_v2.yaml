@@ -1,4 +1,4 @@
-name: 日志-开启
+name: SerialTest
 steps:
 
   - conf:
