@@ -9,6 +9,8 @@ pytest-rerunfailures
 pytest-xdist
 pytest-order
 pytest-asyncio
+pytest-repeat
 jsonpath
 rsa
 pymysql
+pyserial
