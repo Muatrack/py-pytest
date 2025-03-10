@@ -14,3 +14,4 @@ jsonpath
 rsa
 pymysql
 pyserial
+bleak
