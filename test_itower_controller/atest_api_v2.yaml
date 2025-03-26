@@ -1,0 +1,10 @@
+name: fetch baidu # Each test case has a name
+steps:                 # Each test case has multiple steps
+
+  - request:           # steps 1: send request
+      method: get
+      url: https://www.baidu.com
+
+  - response:          # steps 2: assert response
+      status_code: 200
+      text: "*baidu*"
