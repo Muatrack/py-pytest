@@ -16,7 +16,7 @@ def blm_discovery_list():
     assert resp.status_code==200
 
 # @pytest.mark.repeat(10)
-@pytest.mark.http_api_controller
+@pytest.mark.http_api_elc_gateway
 def test_http_ws_api_server():
     time.sleep(1)
     blm_discovery_start()
