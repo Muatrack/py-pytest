@@ -21,19 +21,36 @@ def http_api_1_5_air_off(id:int):
 def test_http_api_all():
     """
         全部HTTP API调用一次
-        
+
         检查请求的连通性，仅检查http api的相应值
     """
-
-    # 子设备id
-    destSlaveId = 1    
+    
     http_api_1_1(); time.sleep(2)                       # 查询设备列表
     http_api_1_2(); time.sleep(2)                       # 查询设备的采集数据
     # 增加设备，名称：自动添加设备， SN：170902FB23DDEEFF
-    http_api_1_3(name="6Ieq5Yqo5re75Yqg6K6+5aSH", sn="170902FB23DDEEFF"); time.sleep(2)
-    http_api_1_5_sw_off(destSlaveId); time.sleep(5)     # 发起分闸
-    http_api_1_5_sw_on(destSlaveId); time.sleep(5)      # 发起合闸
-    http_api_1_5_air_off(destSlaveId); time.sleep(5)    # 发起开机
-    http_api_1_5_air_on(destSlaveId); time.sleep(5)     # 发起关机
-    http_api_1_6(destSlaveId, {"name":"base64"}); time.sleep(2)     # 修改子设备名称    
-    http_api_1_6(destSlaveId, {"pid":0}); time.sleep(2)             # 修改子设备父id
+    # http_api_1_3(name="6Ieq5Yqo5re75Yqg6K6+5aSH", sn="170902FB23DDEEFF"); time.sleep(2)
+
+    repeatCount = 100
+    while( repeatCount>0 ):
+        destSlaveId = 11
+        http_api_1_5_sw_off(destSlaveId); time.sleep(5)     # 发起分闸
+        http_api_1_5_sw_on(destSlaveId); time.sleep(5)      # 发起合闸
+        http_api_1_5_air_off(destSlaveId); time.sleep(5)    # 发起开机
+        http_api_1_5_air_on(destSlaveId); time.sleep(5)     # 发起关机
+
+        destSlaveId = 13
+        http_api_1_5_sw_off(destSlaveId); time.sleep(5)     # 发起分闸
+        http_api_1_5_sw_on(destSlaveId); time.sleep(5)      # 发起合闸
+        http_api_1_5_air_off(destSlaveId); time.sleep(5)    # 发起开机
+        http_api_1_5_air_on(destSlaveId); time.sleep(5)     # 发起关机
+
+        destSlaveId = 18
+        http_api_1_5_sw_off(destSlaveId); time.sleep(5)     # 发起分闸
+        http_api_1_5_sw_on(destSlaveId); time.sleep(5)      # 发起合闸
+        http_api_1_5_air_off(destSlaveId); time.sleep(5)    # 发起开机
+        http_api_1_5_air_on(destSlaveId); time.sleep(5)     # 发起关机
+
+        repeatCount-=1
+
+    # http_api_1_6(destSlaveId, {"name":"base64"}); time.sleep(2)     # 修改子设备名称    
+    # http_api_1_6(destSlaveId, {"pid":0}); time.sleep(2)             # 修改子设备父id

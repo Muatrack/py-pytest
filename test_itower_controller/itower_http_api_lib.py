@@ -1,7 +1,7 @@
 import requests
 from enum import Enum
 
-baseUrl='http://192.168.20.1'
+baseUrl='http://192.168.1.150'
 httpd_header={'ookie': 'auth_key=Basic ZXNwMzI6NjY2ODg4'}
 
 class Api5CtlCls(Enum):
@@ -15,6 +15,7 @@ def http_api_1_1():
     查询设备列表
     """
     resp = requests.get(baseUrl+'/v1/api/slave', timeout=3)
+    print(resp)
     assert resp.status_code==200
     return resp
 
@@ -80,13 +81,15 @@ def http_api_1_5(sId:int, ctlCls:Api5CtlCls):
     data={
         "action": "ctrl",
         "params": {
-            "id": 30,       #设备ID
+            "id": 0,       #设备ID
             "ctrlType": 1,  # 1:分合闸, 2:开关机
             "ctrlValue": 1, # 0:关闭，  1:打开
             "aircMode": 0,  # def:0
             "aircTemp": 0   # def:23
         }
     }
+
+    data["params"]["id"]=sId
 
     if ctlCls==Api5CtlCls.SW_OFF:
         data["params"]["ctrlType"]=1
@@ -104,7 +107,7 @@ def http_api_1_5(sId:int, ctlCls:Api5CtlCls):
         data["params"]["ctrlType"]=2
         data["params"]["ctrlValue"]=1
 
-    resp = requests.post(baseUrl+'/v1/api/slave?id=1',data=data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=3)
     assert resp.status_code==200
     return resp
 
