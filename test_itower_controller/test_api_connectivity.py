@@ -30,25 +30,26 @@ def test_http_api_all():
     # 增加设备，名称：自动添加设备， SN：170902FB23DDEEFF
     # http_api_1_3(name="6Ieq5Yqo5re75Yqg6K6+5aSH", sn="170902FB23DDEEFF"); time.sleep(2)
 
-    repeatCount = 100
+    durationTs = 3
+    repeatCount = 10
     while( repeatCount>0 ):
-        destSlaveId = 11
-        http_api_1_5_sw_off(destSlaveId); time.sleep(5)     # 发起分闸
-        http_api_1_5_sw_on(destSlaveId); time.sleep(5)      # 发起合闸
-        http_api_1_5_air_off(destSlaveId); time.sleep(5)    # 发起开机
-        http_api_1_5_air_on(destSlaveId); time.sleep(5)     # 发起关机
+        destSlaveId = 11        
+        http_api_1_5_sw_off(destSlaveId); time.sleep(durationTs)     # 发起分闸
+        http_api_1_5_sw_on(destSlaveId); time.sleep(durationTs)      # 发起合闸
+        http_api_1_5_air_off(destSlaveId); time.sleep(durationTs)    # 发起开机
+        http_api_1_5_air_on(destSlaveId); time.sleep(durationTs)     # 发起关机
 
         destSlaveId = 13
-        http_api_1_5_sw_off(destSlaveId); time.sleep(5)     # 发起分闸
-        http_api_1_5_sw_on(destSlaveId); time.sleep(5)      # 发起合闸
-        http_api_1_5_air_off(destSlaveId); time.sleep(5)    # 发起开机
-        http_api_1_5_air_on(destSlaveId); time.sleep(5)     # 发起关机
+        http_api_1_5_sw_off(destSlaveId); time.sleep(durationTs)     # 发起分闸
+        http_api_1_5_sw_on(destSlaveId); time.sleep(durationTs)      # 发起合闸
+        http_api_1_5_air_off(destSlaveId); time.sleep(durationTs)    # 发起开机
+        http_api_1_5_air_on(destSlaveId); time.sleep(durationTs)     # 发起关机
 
         destSlaveId = 18
-        http_api_1_5_sw_off(destSlaveId); time.sleep(5)     # 发起分闸
-        http_api_1_5_sw_on(destSlaveId); time.sleep(5)      # 发起合闸
-        http_api_1_5_air_off(destSlaveId); time.sleep(5)    # 发起开机
-        http_api_1_5_air_on(destSlaveId); time.sleep(5)     # 发起关机
+        http_api_1_5_sw_off(destSlaveId); time.sleep(durationTs)     # 发起分闸
+        http_api_1_5_sw_on(destSlaveId); time.sleep(durationTs)      # 发起合闸
+        http_api_1_5_air_off(destSlaveId); time.sleep(durationTs)    # 发起开机
+        http_api_1_5_air_on(destSlaveId); time.sleep(durationTs)     # 发起关机
 
         repeatCount-=1
 
