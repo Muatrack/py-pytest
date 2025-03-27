@@ -21,6 +21,7 @@ def http_api_1_5_air_off(id:int):
 def test_http_api_all():
     """
         全部HTTP API调用一次
+        
         检查请求的连通性，仅检查http api的相应值
     """
 
