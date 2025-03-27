@@ -27,32 +27,45 @@ def http_api_1_2():
     assert resp.status_code==200
     return resp
 
-def http_api_1_3():
+def http_api_1_3(name:str,sn:str):
     """ 
     增加子设备
+
+        :param name: 新增设备名称（用base64编码后的字串）
+        :param sn:   新增设备的SN
     """
     data={
         "action": "new",
         "params": {
-            "name": "5Lit5paH57yW56CB5aW95aOw6Z+z5aSn5biI6K6+",
+            "name": "",
             "parentId": 0,
-            "sn": "170902FB2340E011",
+            "sn": "",
             "exta":{
                 "tempApplyEnv":0
             }
         }
     }
-    resp = requests.post(baseUrl+'/v1/api/slave?id=1',data=data, timeout=3)
+    data["params"]["sn"]=sn
+    data["params"]["name"]=name
+
+    resp = requests.post(baseUrl+'/v1/api/slave', data, timeout=3)
     assert resp.status_code==200
     return resp
 
-def http_api_1_4():
+def http_api_1_4(sId:int):
     """ 
     删除子设备
+
+        :param sId: 待删除子设备的sId
     """
     data={
+        "action": "del",
+        "params": {
+            "id_list": []
+        }
     }
-    resp = requests.post(baseUrl+'/v1/api/slave?id=1',data=data, timeout=3)
+    data["params"]["id_list"].push(sId)
+    resp = requests.post(baseUrl+'/v1/api/slave',data, timeout=3)
     assert resp.status_code==200
     return resp
 
@@ -265,9 +278,26 @@ def http_api_2_19():
 
 def http_api_2_20(filepath:str):
     """
-    上传控制器升级文件到到控制器
+    设备升级
     """    
     data={}
     resp = requests.post(baseUrl+'/v1/api/ota',data,timeout=3)
+    assert resp.status_code==200
+    return resp
+
+def http_api_3_1():
+    """
+    自动搜索设备, 发起后控制器将自动搜索
+        * 环境温度传感器
+        * 人体传感器
+        * 采集器
+        * 回风温度传感器
+    """    
+    data={
+        "action": "discst",
+        "params": {
+        }
+    }
+    resp = requests.post(baseUrl+'/v1/api/slave',data,timeout=3)
     assert resp.status_code==200
     return resp
