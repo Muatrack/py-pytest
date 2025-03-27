@@ -53,5 +53,5 @@ def test_http_api_all():
 
         repeatCount-=1
 
-    # http_api_1_6(destSlaveId, {"name":"base64"}); time.sleep(2)     # 修改子设备名称    
+    # http_api_1_6(destSlaveId, {"name":"base64"}); time.sleep(2)     # 修改子设备名称
     # http_api_1_6(destSlaveId, {"pid":0}); time.sleep(2)             # 修改子设备父id
