@@ -92,7 +92,11 @@ def test_http_api_slave_curd():
         3 增: 增加设备，名称使用 newSlvList 定义
         4 查询设备列表，对比设备数量与3中增加设备数量是否一致
     """
-    changedName:str = '5rWL6K+V5pS55Y+Y5ZCN56ew'
+    fakeSlave:dict = {
+        'name': '5rWL6K+V5pS55Y+Y5ZCN56ew',
+        'pid': 2
+    }
+    
     resp = http_api_1_1()
     assert resp.status_code==200
     body = resp.json()
@@ -141,7 +145,7 @@ def test_http_api_slave_curd():
         assert bFoundSN==True
 
     # 修改设备(sid=1)名称为 changedName
-    respData:object = http_api_1_6(1,{'name':changedName})
+    respData:object = http_api_1_6(1,{'name':fakeSlave['name'], 'pid':fakeSlave['pid']})
     assert respData['code']==1000
     time.sleep(1)
     # 读取设备列表，找到id==1的设备信息，将其name 与 changedName 比较，相等时表示成功
@@ -150,8 +154,8 @@ def test_http_api_slave_curd():
     originList:list=resp.json()['data']['list']
     for item in originList:
         if (item['id']==1):
-           assert item['name']==changedName
-    time.sleep(5)
+           assert item['name']==fakeSlave['name']
+           assert item['pid']==fakeSlave['pid']
 
 
 '''
