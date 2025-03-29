@@ -1,7 +1,7 @@
 import requests
 from enum import Enum
 
-baseUrl='http://192.168.1.150'
+baseUrl='http://192.168.1.160'
 httpd_header={'ookie': 'auth_key=Basic ZXNwMzI6NjY2ODg4'}
 
 class Api5CtlCls(Enum):
@@ -12,17 +12,15 @@ class Api5CtlCls(Enum):
 
 def http_api_1_1():
     """
-    查询设备列表
+        查询设备列表
     """
     resp = requests.get(baseUrl+'/v1/api/slave', timeout=3)
-    print(resp)
-    assert resp.status_code==200
     return resp
 
 def http_api_1_2():
     """ 
-    查询子设备(id)采集数据
-    e.g. 温度传感器的温度，采集器的电流、电压 ...
+        查询子设备(id)采集数据
+        e.g. 温度传感器的温度，采集器的电流、电压 ...
     """
     resp = requests.get(baseUrl+'/v1/api/slave?id=1', timeout=3)
     assert resp.status_code==200

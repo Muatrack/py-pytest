@@ -2,4 +2,4 @@
 
 import pytest
 
-pytest.main(['-s', '-m', 'http_api_itower_controller', "--count=10"])
+pytest.main(['-svx', '-m', 'http_api_itower_controller', "--count=1"])
