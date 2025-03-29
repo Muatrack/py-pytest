@@ -116,6 +116,8 @@ def test_http_api_slave_curd():
         assert respCode==1000
         time.sleep(2)
 
+    time.sleep(5)
+
 '''
 @pytest.mark.repeat(10)
 @pytest.mark.http_api_itower_controller
