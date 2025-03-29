@@ -47,11 +47,13 @@ def http_api_1_3(name:str,sn:str):
     data["params"]["sn"]=sn
     data["params"]["name"]=name
 
-    resp = requests.post(baseUrl+'/v1/api/slave', data, timeout=3)
-    assert resp.status_code==200
-    return resp
+    print(data)
 
-def http_api_1_4(sId:int):
+    resp = requests.post(baseUrl+'/v1/api/slave', json=data, timeout=3)
+    assert resp.status_code==200
+    return resp.json()['code']
+
+def http_api_1_4( sIdList:list ):
     """ 
     删除子设备
 
@@ -63,10 +65,10 @@ def http_api_1_4(sId:int):
             "id_list": []
         }
     }
-    data["params"]["id_list"].push(sId)
-    resp = requests.post(baseUrl+'/v1/api/slave',data, timeout=3)
+    data["params"]["id_list"]=sIdList
+    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=3)
     assert resp.status_code==200
-    return resp
+    return resp.json()["code"]
 
 def http_api_1_5(sId:int, ctlCls:Api5CtlCls):
     """ 
