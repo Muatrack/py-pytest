@@ -47,7 +47,7 @@ def http_api_1_3(name:str,sn:str):
     data["params"]["sn"]=sn
     data["params"]["name"]=name
 
-    print(data)
+    # print(data)
 
     resp = requests.post(baseUrl+'/v1/api/slave', json=data, timeout=3)
     assert resp.status_code==200
@@ -111,36 +111,39 @@ def http_api_1_5(sId:int, ctlCls:Api5CtlCls):
     assert resp.status_code==200
     return resp
 
-def http_api_1_6(sId:int, attributes:object):
-    """
-    修改子设备的属性，可修改的属性有名称、父设备id
 
-    :param sId 子设备的id
-    :param attributes 修改后的属性对象
-        {
-            "name": base64编码名称，
-            "pid": 父设备id
-        }        
+def http_api_1_6(sId:int, attributes:object) -> object:
+    """
+        修改子设备的属性，可修改的属性有名称、父设备id
+
+        :param sId: 子设备的id
+        :param attributes: 修改后的属性对象
+            {
+                "name": base64编码名称，
+                "pid": 父设备id
+            }
+        :return data: data object        
     """
 
     data={
             "action": "mod", # 固定
             "params": {
-                "id": 2,    #设备id
+                "id": sId,    #设备id
+                "pid": 0,
                 "exta": {   #温度传感器的预设安装位置ID
                     "tempApplyEnv": 0
                 }
             }
         }
-    
-    if attributes["name"]:
-        data["name"]=attributes["name"]
-    if attributes["pid"]:
-        data["pid"]=attributes["pid"]
 
-    resp = requests.post(baseUrl+'/v1/api/slave',data=data, timeout=3)
+    if "name" in attributes:
+        data["params"]["name"]=attributes["name"]
+    if "pid" in attributes:
+        data["params"]["pid"]=attributes["pid"]
+
+    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=3)
     assert resp.status_code==200
-    return resp
+    return resp.json()
 
 def http_api_2_2(sId:int, attributes:object):
     """

@@ -22,7 +22,7 @@ newSlvList=[
                 {'sn':'170902FB2340E002', 'name':'5rWL6K+V56m66LCDMg=='},
                 {'sn':'9128B28507570004', 'name':'5rWL6K+V56m66LCDMuWbnumjjjE='},
                 {'sn':'910102FA2340A000', 'name':'5rWL6K+V5Lq65L2T'}
-            ]
+]
 
 def http_api_1_5_sw_on(id:int):
     """
@@ -81,7 +81,7 @@ def test_http_api_slave_query():
     assert body['code']==1000
 
 
-@pytest.mark.repeat(2)
+@pytest.mark.repeat(1)
 @pytest.mark.http_api_itower_controller
 def test_http_api_slave_curd():
     """
@@ -92,31 +92,67 @@ def test_http_api_slave_curd():
         3 增: 增加设备，名称使用 newSlvList 定义
         4 查询设备列表，对比设备数量与3中增加设备数量是否一致
     """
+    changedName:str = '5rWL6K+V5pS55Y+Y5ZCN56ew'
     resp = http_api_1_1()
     assert resp.status_code==200
     body = resp.json()
     assert body['code']==1000
     slvIdList:list = []
     originList:list = body['data']['list']
-    originCount:int = body['data']['count']    
+    originCount:int = body['data']['count']
     
     print('\n')
     for item in originList:
         slvIdList.append( item['id'] )
-        
+    # 删除所有查询到的设备
     if len(slvIdList) > 0:
         respCode = http_api_1_4(slvIdList)
         print('Invoke slave del, resp code:', respCode)
     else:
         print("slave list is empty")
+        print(originList, ' len:', len(originList))
 
+    time.sleep(1)
+    # 此处检查，设备数量应为0
+    resp = http_api_1_1()
+    assert resp.status_code==200
+    originList:list = resp.json()['data']['list']
+    assert len(originList)==0
+
+    # 新增设备
     for item in newSlvList:
-        print("name:%s, sn:%s", {item['name'], item['sn']})
+        # print("name:%s, sn:%s", {item['name'], item['sn']})
         respCode = http_api_1_3( item['name'], item['sn'] )
         assert respCode==1000
-        time.sleep(2)
+        time.sleep(1)
+    # 验证新增结果。先读取子设备列表，验证条目数量，验证全部子设备的sn
+    resp = http_api_1_1()
+    assert resp.status_code==200
+    originList:list=resp.json()['data']['list']
+    # 验证子设备数量，应与 newSlvList 数据
+    assert len(originList)==len(newSlvList) # 验证子设备数量
+    bFoundSN:bool = False
+    for item in originList:
+        bFoundSN=False
+        for ia in newSlvList:
+            if item['sn'].lower()==ia['sn'].lower():
+                bFoundSN=True
+        # 查询到的设备列表，应当与预设列表sn相等
+        assert bFoundSN==True
 
+    # 修改设备(sid=1)名称为 changedName
+    respData:object = http_api_1_6(1,{'name':changedName})
+    assert respData['code']==1000
+    time.sleep(1)
+    # 读取设备列表，找到id==1的设备信息，将其name 与 changedName 比较，相等时表示成功
+    resp = http_api_1_1()
+    assert resp.status_code==200
+    originList:list=resp.json()['data']['list']
+    for item in originList:
+        if (item['id']==1):
+           assert item['name']==changedName
     time.sleep(5)
+
 
 '''
 @pytest.mark.repeat(10)
