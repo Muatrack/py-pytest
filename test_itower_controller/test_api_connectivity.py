@@ -83,13 +83,13 @@ def test_http_api_slave_query():
 
 @pytest.mark.repeat(2)
 @pytest.mark.http_api_itower_controller
-def test_http_api_slave_add():
+def test_http_api_slave_curd():
     """
-        增加设备
+        设备增、删、改、查
 
-        1 查询设备列表
-        2 删除1中所有的设备, 确保控制器已存在设备的状态
-        3 增加设备，名称使用 newSlvList 定义
+        1 查: 查询设备列表
+        2 删: 删除1中所有的设备, 确保控制器已存在设备的状态
+        3 增: 增加设备，名称使用 newSlvList 定义
         4 查询设备列表，对比设备数量与3中增加设备数量是否一致
     """
     resp = http_api_1_1()
@@ -102,7 +102,6 @@ def test_http_api_slave_add():
     
     print('\n')
     for item in originList:
-        # print("slave sn:", item['id'])
         slvIdList.append( item['id'] )
         
     if len(slvIdList) > 0:
@@ -113,9 +112,9 @@ def test_http_api_slave_add():
 
     for item in newSlvList:
         print("name:%s, sn:%s", {item['name'], item['sn']})
-        respCode = http_api_1_3( item['name'], item['sn']))
+        respCode = http_api_1_3( item['name'], item['sn'] )
         assert respCode==1000
-        time.sleep(3)
+        time.sleep(2)
 
 '''
 @pytest.mark.repeat(10)
