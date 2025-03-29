@@ -83,7 +83,7 @@ def test_http_api_slave_query():
 
 @pytest.mark.repeat(1)
 @pytest.mark.http_api_itower_controller
-def test_http_api_slave_curd():
+def test_http_api_slave_crud():
     """
         设备增、删、改、查
 
