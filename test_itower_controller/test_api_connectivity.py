@@ -78,7 +78,7 @@ def test_http_api_all():
     """
     
     http_api_1_1(); time.sleep(2)                       # 查询设备列表
-    http_api_1_2(); time.sleep(2)                       # 查询设备的采集数据
+    # http_api_1_2(); time.sleep(2)                       # 查询设备的采集数据
 
 
 @pytest.mark.repeat(1)
@@ -207,9 +207,17 @@ def test_http_api_power_switch():
     for item in collectorList:
         performCounter = 10
         while performCounter > 0:
+            sId:int = item['id']
             print(item['sn'],' ', item['id'], '----- sw off')
-            http_api_1_5_sw_off(item['id']); time.sleep(durationTs)     # 发起分闸
+            http_api_1_5_sw_off(sId); time.sleep(durationTs)     # 发起分闸
             # 查询子设备采集数据，过滤开关状态
+            swSt = slave_mgr_is_sw_on(sId)
+            if swSt==None:
+                print("<<<<<<<<<<<<<< sw st None")
+            elif swSt==True:
+                print("<<<<<<<<<<<<<< sw is on")
+            else:
+                print("<<<<<<<<<<<<<< sw is off")
 
             print(item['sn'],' ', item['id'], '----- sw on')
             http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸

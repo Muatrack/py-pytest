@@ -1,6 +1,10 @@
 from itower_http_api_lib import *
 import time
 
+collectorStrKey:str     = "WSCK"
+collector2pKey:str      = ""
+collector3pKey:str      = ""
+
 def slave_mgr_list_query():
     '''
         查询设备列表
@@ -17,7 +21,42 @@ def slave_mgr_list_query():
     return originCount, originList
 
 def slave_mgr_data_query(sId:int):
-    http_api_1_2()
+    """ 查询子设备的采集数据
+        :param sId: 子设备id
+        :param Object: 返回查询到的子设备数据
+    """
+    dataResp:object = http_api_1_2()
+    return dataResp
+
+def slave_mgr_control_status(data:object)->tuple[bool,bool,bool,bool]|None:
+    """ 判断采集器多种控制功能的状态
+
+        :param data: 读取的子设备采集信息object
+        :return tuple[]: 节能模式T/F, 压缩机运行T/F, 开关机T/F, 分合闸T/F
+    """
+    # 判断采集器类型 2p/3p | "ECO=1, RUN=0, ON=0, POW=1"
+    assert collectorStrKey in data['model'] and "values" in data['data']
+    if 'STA' not in data['values']:
+        return None
+    strArray=data['values']['STA'].split(",")
+    assert len(strArray)==4
+    return strArray[0].split("=")[1], strArray[1].split("=")[1], strArray[2].split("=")[1], strArray[3].split("=")[1]
+
+
+def slave_mgr_is_sw_on(sId:int)->bool|None:
+    """ 判断采集器的电闸是否合闸状态
+
+        :param data: 读取的子设备采集信息object
+        :return: 0-节能模式T/F, 1-压缩机运行T/F, 2-开关机T/F, 3-分合闸T/F
+    """
+    # 发起请求, 读取子设备的采集数据
+    respData:object = http_api_1_2(sId)
+    ctrlStatus=slave_mgr_control_status(respData)
+    if ctrlStatus==None:
+        return None
+    else:
+        return ctrlStatus[3]
+
 
 def slave_mgr_delete_all():
     '''

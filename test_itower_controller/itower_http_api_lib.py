@@ -17,14 +17,16 @@ def http_api_1_1():
     resp = requests.get(baseUrl+'/v1/api/slave', timeout=5)
     return resp
 
-def http_api_1_2():
+def http_api_1_2(sId:int):
     """ 
         查询子设备(id)采集数据
         e.g. 温度传感器的温度，采集器的电流、电压 ...
+
+        :param sId: 子设备id
     """
-    resp = requests.get(baseUrl+'/v1/api/slave?id=1', timeout=5)
+    resp = requests.get(baseUrl+'/v1/api/slave?id='+str(sId), timeout=5)
     assert resp.status_code==200
-    return resp
+    return resp.json()['data']
 
 def http_api_1_3(name:str,sn:str):
     """ 
