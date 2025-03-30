@@ -3,6 +3,20 @@ import requests
 # import responses_validator
 import time
 from itower_http_api_lib import *
+from itower_http_api_wrapper import *
+
+
+"""
+用例说明
+
+1 子设备增删改查
+2 分合闸
+    2.1  自动搜索
+    2.2  对采集器发起分合闸测试
+3 开关机 ???
+
+"""
+
 
 '''
 预定义值
@@ -23,6 +37,10 @@ newSlvList=[
                 {'sn':'9128B28507570004', 'name':'5rWL6K+V56m66LCDMuWbnumjjjE='},
                 {'sn':'910102FA2340A000', 'name':'5rWL6K+V5Lq65L2T'}
 ]
+
+collectorStrKey:str = "WSCK"
+
+# 预定义值
 
 def http_api_1_5_sw_on(id:int):
     """
@@ -61,11 +79,7 @@ def test_http_api_all():
     
     http_api_1_1(); time.sleep(2)                       # 查询设备列表
     http_api_1_2(); time.sleep(2)                       # 查询设备的采集数据
-    # 增加设备，名称：自动添加设备， SN：170902FB23DDEEFF
-    # http_api_1_3(name="6Ieq5Yqo5re75Yqg6K6+5aSH", sn="170902FB23DDEEFF"); time.sleep(2)
 
-    # http_api_1_6(destSlaveId, {"name":"base64"}); time.sleep(2)     # 修改子设备名称
-    # http_api_1_6(destSlaveId, {"pid":0}); time.sleep(2)             # 修改子设备父id
 
 @pytest.mark.repeat(1)
 @pytest.mark.http_api_itower_controller
@@ -79,6 +93,8 @@ def test_http_api_slave_query():
     assert resp.status_code==200
     body = resp.json()
     assert body['code']==1000
+    time.sleep(1)
+    return None
 
 
 @pytest.mark.repeat(1)
@@ -128,7 +144,7 @@ def test_http_api_slave_crud():
         # print("name:%s, sn:%s", {item['name'], item['sn']})
         respCode = http_api_1_3( item['name'], item['sn'] )
         assert respCode==1000
-        time.sleep(1)
+        time.sleep(2)
     # 验证新增结果。先读取子设备列表，验证条目数量，验证全部子设备的sn
     resp = http_api_1_1()
     assert resp.status_code==200
@@ -158,40 +174,53 @@ def test_http_api_slave_crud():
            assert item['pid']==fakeSlave['pid']
 
 
-'''
 @pytest.mark.repeat(10)
 @pytest.mark.http_api_itower_controller
 def test_http_api_power_switch():
     """
         分合闸循环
-        
-        依赖 test_http_api_slave_query 查询结果
-        遍历列表中属于采集器的类型设备，进行分合闸控制
+        1. 删除所有设备
+        2. 执行设备搜索、自动添加
+        3. 查询设备列表
+        4. 循环分合闸
     """
-    durationTs = 3
-    repeatCount = 10
-    while( repeatCount>0 ):
-        destSlaveId = 11
-        http_api_1_5_sw_off(destSlaveId); time.sleep(durationTs)     # 发起分闸
-        http_api_1_5_sw_on(destSlaveId); time.sleep(durationTs)      # 发起合闸
-        http_api_1_5_air_off(destSlaveId); time.sleep(durationTs)    # 发起开机
-        http_api_1_5_air_on(destSlaveId); time.sleep(durationTs)     # 发起关机
 
-        destSlaveId = 13
-        http_api_1_5_sw_off(destSlaveId); time.sleep(durationTs)     # 发起分闸
-        http_api_1_5_sw_on(destSlaveId); time.sleep(durationTs)      # 发起合闸
-        http_api_1_5_air_off(destSlaveId); time.sleep(durationTs)    # 发起开机
-        http_api_1_5_air_on(destSlaveId); time.sleep(durationTs)     # 发起关机
+    # 删除所有设备
+    slave_mgr_delete_all()
+    time.sleep(10)
+    # 执行自动搜索
+    slave_mgr_discovery()
+    time.sleep(30)
+    # 查询设备
+    slvCnt, slvList = slave_mgr_list_query()
+    assert slvCnt>0
 
-        destSlaveId = 18
-        http_api_1_5_sw_off(destSlaveId); time.sleep(durationTs)     # 发起分闸
-        http_api_1_5_sw_on(destSlaveId); time.sleep(durationTs)      # 发起合闸
-        http_api_1_5_air_off(destSlaveId); time.sleep(durationTs)    # 发起开机
-        http_api_1_5_air_on(destSlaveId); time.sleep(durationTs)     # 发起关机
+    collectorList:list = []
+    # 遍历列表，过滤出采集器的id，并装入列表 collectorList
+    for item in slvList:
+        if collectorStrKey in item['model']:
+            collectorList.append({'id':item['id'],'sn':item['sn']})
+    assert len(collectorList)>0
 
-        repeatCount-=1
+    durationTs:int = 6    
+    # 遍历 id list, 发送分合闸、开关机控制
+    for item in collectorList:
+        performCounter = 10
+        while performCounter > 0:
+            print(item['sn'],' ', item['id'], '----- sw off')
+            http_api_1_5_sw_off(item['id']); time.sleep(durationTs)     # 发起分闸
+            # 查询子设备采集数据，过滤开关状态
+
+            print(item['sn'],' ', item['id'], '----- sw on')
+            http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸
+            print(item['sn'],' ', item['id'], '----- ac off')
+            http_api_1_5_air_off(item['id']); time.sleep(durationTs)    # 发起开机
+            print(item['sn'],' ', item['id'], '----- ac on')
+            http_api_1_5_air_on(item['id']); time.sleep(durationTs)     # 发起关机
+            performCounter-=1
 
 
+'''
 @pytest.mark.repeat(10)
 @pytest.mark.http_api_itower_controller
 def test_http_api_ac_switch():

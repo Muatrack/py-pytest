@@ -14,7 +14,7 @@ def http_api_1_1():
     """
         查询设备列表
     """
-    resp = requests.get(baseUrl+'/v1/api/slave', timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/slave', timeout=5)
     return resp
 
 def http_api_1_2():
@@ -22,7 +22,7 @@ def http_api_1_2():
         查询子设备(id)采集数据
         e.g. 温度传感器的温度，采集器的电流、电压 ...
     """
-    resp = requests.get(baseUrl+'/v1/api/slave?id=1', timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/slave?id=1', timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -46,10 +46,7 @@ def http_api_1_3(name:str,sn:str):
     }
     data["params"]["sn"]=sn
     data["params"]["name"]=name
-
-    # print(data)
-
-    resp = requests.post(baseUrl+'/v1/api/slave', json=data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/slave', json=data, timeout=5)
     assert resp.status_code==200
     return resp.json()['code']
 
@@ -66,7 +63,7 @@ def http_api_1_4( sIdList:list ):
         }
     }
     data["params"]["id_list"]=sIdList
-    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=5)
     assert resp.status_code==200
     return resp.json()["code"]
 
@@ -107,7 +104,7 @@ def http_api_1_5(sId:int, ctlCls:Api5CtlCls):
         data["params"]["ctrlType"]=2
         data["params"]["ctrlValue"]=1
 
-    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -141,7 +138,7 @@ def http_api_1_6(sId:int, attributes:object) -> object:
     if "pid" in attributes:
         data["params"]["pid"]=attributes["pid"]
 
-    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=5)
     assert resp.status_code==200
     return resp.json()
 
@@ -149,7 +146,7 @@ def http_api_2_2(sId:int, attributes:object):
     """
     重启系统
     """
-    resp = requests.post(baseUrl+'/v1/api/slave',data=data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/slave',data=data, timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -158,7 +155,7 @@ def http_api_2_3(sId:int, attributes:object):
     提交授权码
     """
     data={}
-    resp = requests.post(baseUrl+'/v1/api/system',data=data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/system',data=data, timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -166,7 +163,7 @@ def http_api_2_4(sId:int, attributes:object):
     """
     查询授权码
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=aucode',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=aucode',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -174,7 +171,7 @@ def http_api_2_5(sId:int, attributes:object):
     """
     查询序列号(SN)
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=sncode',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=sncode',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -182,7 +179,7 @@ def http_api_2_7(sId:int, attributes:object):
     """
     查询控制器OTA缓存
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=otalist',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=otalist',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -190,7 +187,7 @@ def http_api_2_8(sId:int, attributes:object):
     """
     查询固件版本
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=fwver',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=fwver',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -198,7 +195,7 @@ def http_api_2_10(sId:int, attributes:object):
     """
     查询LUA文件列表
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=lualist',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=lualist',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -206,7 +203,7 @@ def http_api_2_11(sId:int, attributes:object):
     """
     查询空调配置
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=airconf',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=airconf',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -214,7 +211,7 @@ def http_api_2_12(sId:int, attributes:object):
     """
     查询控制器配置
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=ctlerst',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=ctlerst',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -222,7 +219,7 @@ def http_api_2_13(sId:int, attributes:object):
     """
     查询LTE状态
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=ltestate',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=ltestate',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -230,7 +227,7 @@ def http_api_2_14(sId:int, attributes:object):
     """
     查询平台地址
     """
-    resp = requests.get(baseUrl+'/v1/api/system?part=platform',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=platform',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -245,7 +242,7 @@ def http_api_2_15(addr:str):
         }
     }
     data["host"]=addr
-    resp = requests.post(baseUrl+'/v1/api/system',data, timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/system',data, timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -253,7 +250,7 @@ def http_api_2_16(addr:str):
     """
     查询预设温度传感器安装位置
     """    
-    resp = requests.get(baseUrl+'/v1/api/system?part=slvTempAppId',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=slvTempAppId',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -261,7 +258,7 @@ def http_api_2_17():
     """
     查询控制器已存json文件列表
     """    
-    resp = requests.get(baseUrl+'/v1/api/system?part=jsonlist',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/system?part=jsonlist',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -269,7 +266,7 @@ def http_api_2_18():
     """
     查询控制器新/旧固件版本号及新版本应用状态
     """    
-    resp = requests.get(baseUrl+'/v1/api/ota/part=all',timeout=3)
+    resp = requests.get(baseUrl+'/v1/api/ota/part=all',timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -278,7 +275,7 @@ def http_api_2_19():
     应用新版本
     """    
     data={}
-    resp = requests.post(baseUrl+'/v1/api/otaconfirm',data,timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/otaconfirm',data,timeout=5)
     assert resp.status_code==200
     return resp
 
@@ -287,23 +284,22 @@ def http_api_2_20(filepath:str):
     设备升级
     """    
     data={}
-    resp = requests.post(baseUrl+'/v1/api/ota',data,timeout=3)
+    resp = requests.post(baseUrl+'/v1/api/ota',data,timeout=5)
     assert resp.status_code==200
     return resp
 
 def http_api_3_1():
+    """ 自动搜索设备, 发起后控制器将自动搜索。
+
+        可搜索的设备类型如下:
+            * 环境温度传感器
+            * 人体传感器
+            * 采集器
+            * 回风温度传感器
     """
-    自动搜索设备, 发起后控制器将自动搜索
-        * 环境温度传感器
-        * 人体传感器
-        * 采集器
-        * 回风温度传感器
-    """    
-    data={
-        "action": "discst",
-        "params": {
-        }
-    }
-    resp = requests.post(baseUrl+'/v1/api/slave',data,timeout=3)
+
+    json={"action":"discst","params":{}}
+
+    resp = requests.post(baseUrl+'/v1/api/slave',json=json,timeout=5)
     assert resp.status_code==200
     return resp
