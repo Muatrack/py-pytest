@@ -84,9 +84,7 @@ def test_http_api_all():
 @pytest.mark.repeat(1)
 @pytest.mark.http_api_itower_controller
 def test_http_api_slave_query():
-    """
-        查询设备
-
+    """ 查询设备
         :return 子设备数组:
     """
     resp = http_api_1_1()
@@ -100,13 +98,11 @@ def test_http_api_slave_query():
 @pytest.mark.repeat(1)
 @pytest.mark.http_api_itower_controller
 def test_http_api_slave_crud():
-    """
-        设备增、删、改、查
-
-        1 查: 查询设备列表
-        2 删: 删除1中所有的设备, 确保控制器已存在设备的状态
-        3 增: 增加设备，名称使用 newSlvList 定义
-        4 查询设备列表，对比设备数量与3中增加设备数量是否一致
+    """ 设备增、删、改、查
+        1. 查: 查询设备列表
+        2. 删: 删除1中所有的设备, 确保控制器已存在设备的状态
+        3. 增: 增加设备，名称使用 newSlvList 定义
+        4. 查询设备列表，对比设备数量与3中增加设备数量是否一致
     """
     fakeSlave:dict = {
         'name': '5rWL6K+V5pS55Y+Y5ZCN56ew',
@@ -174,11 +170,10 @@ def test_http_api_slave_crud():
            assert item['pid']==fakeSlave['pid']
 
 
-@pytest.mark.repeat(10)
+@pytest.mark.repeat(3)
 @pytest.mark.http_api_itower_controller
 def test_http_api_power_switch():
-    """
-        分合闸循环
+    """ 分合闸循环
         1. 删除所有设备
         2. 执行设备搜索、自动添加
         3. 查询设备列表
@@ -186,11 +181,50 @@ def test_http_api_power_switch():
     """
 
     # 删除所有设备
-    slave_mgr_delete_all()
-    time.sleep(10)
+    slave_mgr_delete_all(); time.sleep(10)
     # 执行自动搜索
-    slave_mgr_discovery()
-    time.sleep(30)
+    slave_mgr_discovery();  time.sleep(30)
+    # 查询设备
+    slvCnt, slvList = slave_mgr_list_query()
+    assert slvCnt>0
+    collectorList:list = []
+    # 遍历列表，过滤出采集器的id，并装入列表 collectorList
+    for item in slvList:
+        if collectorStrKey in item['model']:
+            collectorList.append({'id':item['id'],'sn':item['sn']})
+    assert len(collectorList)>0
+    durationTs:int = 6
+    # 遍历 id list, 发送分合闸、开关机控制
+    for item in collectorList:
+        performCounter = 10
+        while performCounter > 0:
+            sId:int = item['id']
+            print(item['sn'],' ', item['id'], '----- sw off')
+            http_api_1_5_sw_off(sId); time.sleep(durationTs)     # 发起分闸
+            # 查询子设备采集数据，过滤开关状态
+            swSt = slave_mgr_is_sw_on(sId); time.sleep(2)
+            # assert swSt==False
+            print(item['sn'],' ', item['id'], '----- sw on')            
+            http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸            
+            # assert swSt==True
+            performCounter-=1
+
+'''
+@pytest.mark.repeat(10)
+@pytest.mark.http_api_itower_controller
+def test_http_api_ac_switch():
+    """
+        开关机循环
+        1. 删除所有设备
+        2. 执行设备搜索、自动添加
+        3. 查询设备列表
+        4. 循环分合闸
+    """
+
+    # 删除所有设备
+    slave_mgr_delete_all(); time.sleep(10)
+    # 执行自动搜索
+    slave_mgr_discovery();  time.sleep(30)
     # 查询设备
     slvCnt, slvList = slave_mgr_list_query()
     assert slvCnt>0
@@ -208,19 +242,6 @@ def test_http_api_power_switch():
         performCounter = 10
         while performCounter > 0:
             sId:int = item['id']
-            print(item['sn'],' ', item['id'], '----- sw off')
-            http_api_1_5_sw_off(sId); time.sleep(durationTs)     # 发起分闸
-            # 查询子设备采集数据，过滤开关状态
-            swSt = slave_mgr_is_sw_on(sId)
-            if swSt==None:
-                print("<<<<<<<<<<<<<< sw st None")
-            elif swSt==True:
-                print("<<<<<<<<<<<<<< sw is on")
-            else:
-                print("<<<<<<<<<<<<<< sw is off")
-
-            print(item['sn'],' ', item['id'], '----- sw on')
-            http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸
             print(item['sn'],' ', item['id'], '----- ac off')
             http_api_1_5_air_off(item['id']); time.sleep(durationTs)    # 发起开机
             print(item['sn'],' ', item['id'], '----- ac on')
@@ -228,7 +249,6 @@ def test_http_api_power_switch():
             performCounter-=1
 
 
-'''
 @pytest.mark.repeat(10)
 @pytest.mark.http_api_itower_controller
 def test_http_api_ac_switch():

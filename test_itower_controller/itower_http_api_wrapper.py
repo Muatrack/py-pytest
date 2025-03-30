@@ -28,19 +28,24 @@ def slave_mgr_data_query(sId:int):
     dataResp:object = http_api_1_2()
     return dataResp
 
-def slave_mgr_control_status(data:object)->tuple[bool,bool,bool,bool]|None:
+def slave_mgr_control_status(dataIn:object)->tuple[bool,bool,bool,bool]|None:
     """ 判断采集器多种控制功能的状态
 
         :param data: 读取的子设备采集信息object
         :return tuple[]: 节能模式T/F, 压缩机运行T/F, 开关机T/F, 分合闸T/F
     """
     # 判断采集器类型 2p/3p | "ECO=1, RUN=0, ON=0, POW=1"
-    assert collectorStrKey in data['model'] and "values" in data['data']
-    if 'STA' not in data['values']:
+    assert collectorStrKey in dataIn['model'] and "values" in dataIn
+    if 'STA' not in dataIn['values']:
         return None
-    strArray=data['values']['STA'].split(",")
+    strArray=dataIn['values']['STA'].split(",")
     assert len(strArray)==4
-    return strArray[0].split("=")[1], strArray[1].split("=")[1], strArray[2].split("=")[1], strArray[3].split("=")[1]
+    ecoSt:str = strArray[0].split("=")[1]
+    runSt:str = strArray[1].split("=")[1]
+    onSt:str  = strArray[2].split("=")[1]
+    powSt:str = strArray[3].split("=")[1]
+
+    return ecoSt=='1',runSt=='1',onSt=='1',powSt=='1'
 
 
 def slave_mgr_is_sw_on(sId:int)->bool|None:
@@ -52,10 +57,8 @@ def slave_mgr_is_sw_on(sId:int)->bool|None:
     # 发起请求, 读取子设备的采集数据
     respData:object = http_api_1_2(sId)
     ctrlStatus=slave_mgr_control_status(respData)
-    if ctrlStatus==None:
-        return None
-    else:
-        return ctrlStatus[3]
+    if ctrlStatus==None: return None
+    else: return ctrlStatus[3]
 
 
 def slave_mgr_delete_all():
