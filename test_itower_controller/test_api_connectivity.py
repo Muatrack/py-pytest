@@ -169,21 +169,26 @@ def test_http_api_slave_crud():
            assert item['name']==fakeSlave['name']
            assert item['pid']==fakeSlave['pid']
 
-
-@pytest.mark.repeat(3)
+@pytest.mark.repeat(1)
 @pytest.mark.http_api_itower_controller
-def test_http_api_power_switch():
-    """ 分合闸循环
-        1. 删除所有设备
-        2. 执行设备搜索、自动添加
-        3. 查询设备列表
-        4. 循环分合闸
+def test_http_api_discovery():
+    """ 发现周边设备, 发现设备完毕后延迟30s, 给发现功能留出足够的运行时间
+        1. 删除所有一存在的设备
+        2. 开启发现周边设备
     """
-
     # 删除所有设备
     slave_mgr_delete_all(); time.sleep(10)
     # 执行自动搜索
     slave_mgr_discovery();  time.sleep(30)
+
+
+@pytest.mark.repeat(3)
+@pytest.mark.http_api_itower_controller
+def test_http_api_power_switch():
+    """ 分合闸循环, 测试环境中存在异常的采集器 sn:170902fb2399036d， 将其排除
+        1. 查询设备列表
+        2. 对采集器实施循环分合闸
+    """
     # 查询设备
     slvCnt, slvList = slave_mgr_list_query()
     assert slvCnt>0
@@ -196,18 +201,18 @@ def test_http_api_power_switch():
     durationTs:int = 6
     # 遍历 id list, 发送分合闸、开关机控制
     for item in collectorList:
-        performCounter = 10
-        while performCounter > 0:
-            sId:int = item['id']
-            print(item['sn'],' ', item['id'], '----- sw off')
-            http_api_1_5_sw_off(sId); time.sleep(durationTs)     # 发起分闸
-            # 查询子设备采集数据，过滤开关状态
-            swSt = slave_mgr_is_sw_on(sId); time.sleep(2)
-            # assert swSt==False
-            print(item['sn'],' ', item['id'], '----- sw on')            
-            http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸            
-            # assert swSt==True
-            performCounter-=1
+        sId:int = item['id']
+        
+        if '170902fb2399036d'.lower()==item['sn'].lower(): break             # 排除异常的sn设备
+
+        print(item['sn'],' ', item['id'], '----- sw off')
+        http_api_1_5_sw_off(sId); time.sleep(durationTs)     # 发起分闸
+        # 查询子设备采集数据，过滤开关状态
+        swSt = slave_mgr_is_sw_on(sId); time.sleep(2)
+        # assert swSt==False
+        print(item['sn'],' ', item['id'], '----- sw on')            
+        http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸            
+        # assert swSt==True
 
 '''
 @pytest.mark.repeat(10)
