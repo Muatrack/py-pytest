@@ -189,6 +189,7 @@ def test_http_api_power_switch():
         1. 查询设备列表
         2. 对采集器实施循环分合闸
     """
+    print('\n')
     # 查询设备
     slvCnt, slvList = slave_mgr_list_query()
     assert slvCnt>0
@@ -202,7 +203,7 @@ def test_http_api_power_switch():
     # 遍历 id list, 发送分合闸、开关机控制
     for item in collectorList:
         sId:int = item['id']
-        
+
         if '170902fb2399036d'.lower()==item['sn'].lower(): break             # 排除异常的sn设备
 
         print(item['sn'],' ', item['id'], '----- sw off')
