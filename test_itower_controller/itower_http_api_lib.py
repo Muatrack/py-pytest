@@ -9,6 +9,8 @@ class Api5CtlCls(Enum):
     SW_OFF  =   1
     AIR_ON  =   2
     AIR_OFF =   3
+    ECO_ON  =   4
+    ECO_OFF =   5
 
 def http_api_1_1():
     """
@@ -104,6 +106,14 @@ def http_api_1_5(sId:int, ctlCls:Api5CtlCls):
 
     if ctlCls==Api5CtlCls.AIR_ON:
         data["params"]["ctrlType"]=2
+        data["params"]["ctrlValue"]=1
+
+    if ctlCls==Api5CtlCls.ECO_OFF:
+        data["params"]["ctrlType"]=3
+        data["params"]["ctrlValue"]=0
+
+    if ctlCls==Api5CtlCls.ECO_ON:
+        data["params"]["ctrlType"]=3
         data["params"]["ctrlValue"]=1
 
     resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=5)

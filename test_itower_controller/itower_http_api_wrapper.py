@@ -6,12 +6,9 @@ collector2pKey:str      = ""
 collector3pKey:str      = ""
 
 def slave_mgr_list_query():
+    ''' 查询设备列表
+        :return int, list: 设备数量，设备列表
     '''
-        查询设备列表
-
-        :return 设备数量，设备列表:
-    '''
-
     resp = http_api_1_1()
     assert resp.status_code==200
     body = resp.json()
@@ -19,6 +16,21 @@ def slave_mgr_list_query():
     originList:list = body['data']['list']
     originCount:int = body['data']['count']
     return originCount, originList
+
+def slave_mgr_collector_list()->list|None:
+    ''' 查询采集器列表
+        :return int, list: 设备数量，设备列表
+    '''
+    collectorList:list = []
+    slvCnt,slvList=slave_mgr_list_query()
+    if slvCnt<1:
+        return None
+    for item in slvList:
+        if (collectorStrKey in item['model']) and ('170902fb2399036d'.lower()!=item['sn'].lower()):
+            collectorList.append( item )
+    if len(collectorList)>0: return collectorList
+    else: return None
+
 
 def slave_mgr_data_query(sId:int):
     """ 查询子设备的采集数据
@@ -28,11 +40,11 @@ def slave_mgr_data_query(sId:int):
     dataResp:object = http_api_1_2()
     return dataResp
 
-def slave_mgr_control_status(dataIn:object)->tuple[bool,bool,bool,bool]|None:
+def _slave_mgr_control_status(dataIn:object)->tuple[bool,bool,bool,bool]|None:
     """ 判断采集器多种控制功能的状态
 
         :param data: 读取的子设备采集信息object
-        :return tuple[]: 节能模式T/F, 压缩机运行T/F, 开关机T/F, 分合闸T/F
+        :return tuple[]: [0]节能模式T/F, [1]压缩机运行T/F, [2]开关机T/F, [3]分合闸T/F
     """
     # 判断采集器类型 2p/3p | "ECO=1, RUN=0, ON=0, POW=1"
     assert collectorStrKey in dataIn['model'] and "values" in dataIn
@@ -48,18 +60,27 @@ def slave_mgr_control_status(dataIn:object)->tuple[bool,bool,bool,bool]|None:
     return ecoSt=='1',runSt=='1',onSt=='1',powSt=='1'
 
 
-def slave_mgr_is_sw_on(sId:int)->bool|None:
+def slave_mgr_is_pow_on(sId:int)->bool|None:
     """ 判断采集器的电闸是否合闸状态
-
         :param data: 读取的子设备采集信息object
         :return: 0-节能模式T/F, 1-压缩机运行T/F, 2-开关机T/F, 3-分合闸T/F
     """
     # 发起请求, 读取子设备的采集数据
     respData:object = http_api_1_2(sId)
-    ctrlStatus=slave_mgr_control_status(respData)
+    ctrlStatus=_slave_mgr_control_status(respData)
     if ctrlStatus==None: return None
     else: return ctrlStatus[3]
 
+def slave_mgr_is_eco_on(sId:int)->bool|None:
+    """ 读取采集器节能控制当前的状态
+        :param data: 读取的子设备采集信息object
+        :return: 1-节能开启，0-节能关闭
+    """
+    # 发起请求, 读取子设备的采集数据
+    respData:object = http_api_1_2(sId)
+    ctrlStatus=_slave_mgr_control_status(respData)
+    if ctrlStatus==None: return None
+    else: return ctrlStatus[0]
 
 def slave_mgr_delete_all():
     '''
@@ -89,3 +110,12 @@ def slave_mgr_delete_all():
 def slave_mgr_discovery():
     """ 请求控制器自动发现周边设备 """
     http_api_3_1()
+
+
+def slave_mgr_eco_st_set(sId:int, sw:bool):
+    """ 采集器节能开启/关闭
+        :param sId: 子设备id
+        :param sw:  True-开启节能，False-关闭节能
+    """
+    if sw==True: http_api_1_5(sId, Api5CtlCls.ECO_ON)
+    else: http_api_1_5(sId, Api5CtlCls.ECO_OFF)

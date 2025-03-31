@@ -3,3 +3,4 @@
 import pytest
 
 pytest.main(['-svx', '-m', 'http_api_itower_controller', "--count=1"])
+# pytest.main(['-svx', '-m', 'http_api_new', "--count=1"])

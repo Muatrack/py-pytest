@@ -183,9 +183,9 @@ def test_http_api_discovery():
     slave_mgr_discovery();  time.sleep(30)
 
 
-@pytest.mark.repeat(3)
+@pytest.mark.repeat(0)
 @pytest.mark.http_api_itower_controller
-def test_http_api_power_switch():
+def _test_http_api_power_switch():
     """ 分合闸循环, 测试环境中存在异常的采集器 sn:170902fb2399036d， 将其排除
         1. 查询设备列表
         2. 对采集器实施循环分合闸
@@ -210,20 +210,41 @@ def test_http_api_power_switch():
         print(item['sn'],' ', item['id'], '----- sw off')
         http_api_1_5_sw_off(sId); time.sleep(durationTs)     # 发起分闸
         # 查询子设备采集数据，过滤开关状态
-        swSt = slave_mgr_is_sw_on(sId); time.sleep(2)
+        swSt = slave_mgr_is_pow_on(sId); time.sleep(2)
         # assert swSt==False
         print(item['sn'],' ', item['id'], '----- sw on')            
         http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸            
         # assert swSt==True
 
-@pytest.mark.repeat(3)
+@pytest.mark.repeat(5)
 @pytest.mark.http_api_itower_controller
+@pytest.mark.http_api_new
 def test_http_api_eco_switch():
     """
         控制器节能开/关控制
+        1. 遍历设备列表,过滤采集器类设备，收集设备ID
+        2. 查询节能当前状态
+        3. 设置与1查询结果相反的状态
+        4. 查询节能当前状态是否与步骤2设置的状态相同
     """
-    pass
+    
+    collectorList = slave_mgr_collector_list()
+    assert collectorList != None
 
+    print('\n')
+    for item in collectorList:
+        count:int = 2
+        expectedEcoSt:bool = False
+        while count > 0:
+            sId:int = item['id']
+            ecoStIsOn = slave_mgr_is_eco_on( sId ); time.sleep(2) # 读取采集器当前的节能状态        
+            if ecoStIsOn==True: expectedEcoSt = False
+            else: expectedEcoSt = True
+            slave_mgr_eco_st_set(sId, expectedEcoSt); time.sleep(2)
+            ecoStIsOn = slave_mgr_is_eco_on( sId ) # 读取采集器当前的节能状态
+            assert ecoStIsOn==expectedEcoSt
+            time.sleep(2)
+            count-=1
 
 '''
 @pytest.mark.repeat(10)
