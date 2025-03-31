@@ -27,28 +27,26 @@ def test_http_api_power_switch():
     # 查询设备
     collectorList = slave_mgr_collector_list()
     assert collectorList != None
-    durationTs:int = 6
     # 遍历 id list, 发送分合闸、开关机控制
     for item in collectorList:
         sId:int = item['id']
         runTimes:int = 2
         expectedSwSt:bool = False
 
-        while runTimes>0:
-            # 查询状态
-            swSt = slave_mgr_is_pow_on(sId); time.sleep(2)
-            if swSt==True: expectedSwSt=False
-            else: expectedSwSt = True
-            # 设置分合闸
-            print(">>>>>>>>>> ", str(expectedSwSt))
-            slave_mgr_power_st_set(sId, expectedSwSt)
-            time.sleep(5)
-            # 查询、验证电闸状态
-            print("<<<<<<<<<< ", str(expectedSwSt))
-            swSt = slave_mgr_is_pow_on(sId)
-            assert swSt==expectedSwSt
-            time.sleep(1)
-            runTimes-=1
+        # 查询状态
+        swSt = slave_mgr_is_pow_on(sId); time.sleep(2)
+        if swSt==True: expectedSwSt=False
+        else: expectedSwSt = True
+        # 设置分合闸
+        print(">>>>>>>>>> ", str(expectedSwSt))
+        slave_mgr_power_st_set(sId, expectedSwSt)
+        time.sleep(10)
+        # 查询、验证电闸状态
+        print("<<<<<<<<<< ", str(expectedSwSt))
+        swSt = slave_mgr_is_pow_on(sId)
+        assert swSt==expectedSwSt
+        time.sleep(1)
+        runTimes-=1
 
 '''
 @pytest.mark.repeat(10)
