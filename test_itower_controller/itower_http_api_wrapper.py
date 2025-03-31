@@ -67,6 +67,7 @@ def slave_mgr_is_pow_on(sId:int)->bool|None:
     """
     # 发起请求, 读取子设备的采集数据
     respData:object = http_api_1_2(sId)
+    print(respData)
     ctrlStatus=_slave_mgr_control_status(respData)
     if ctrlStatus==None: return None
     else: return ctrlStatus[3]

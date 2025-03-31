@@ -40,11 +40,11 @@ def test_http_api_power_switch():
             if swSt==True: expectedSwSt=False
             else: expectedSwSt = True
             # 设置分合闸
-            print(">>>>>>>>>> power st set ", str(expectedSwSt))
+            print(">>>>>>>>>> ", str(expectedSwSt))
             slave_mgr_power_st_set(sId, expectedSwSt)
-            time.sleep(3)
+            time.sleep(5)
             # 查询、验证电闸状态
-            print("<<<<<<<<<< power st get ", str(expectedSwSt))
+            print("<<<<<<<<<< ", str(expectedSwSt))
             swSt = slave_mgr_is_pow_on(sId)
             assert swSt==expectedSwSt
             time.sleep(1)
