@@ -26,7 +26,7 @@ def slave_mgr_collector_list()->list|None:
     if slvCnt<1:
         return None
     for item in slvList:
-        if (collectorStrKey in item['model']) and ('170902fb2399036d'.lower()!=item['sn'].lower()):
+        if (collectorStrKey in item['model']) :
             collectorList.append( item )
     if len(collectorList)>0: return collectorList
     else: return None
