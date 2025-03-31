@@ -1,5 +1,6 @@
 import requests
 from enum import Enum
+from http_request_wrapper import *
 
 baseUrl='http://192.168.1.160'
 httpd_header={'ookie': 'auth_key=Basic ZXNwMzI6NjY2ODg4'}
@@ -117,6 +118,7 @@ def http_api_1_5(sId:int, ctlCls:Api5CtlCls):
         data["params"]["ctrlValue"]=1
 
     resp = requests.post(baseUrl+'/v1/api/slave',json=data, timeout=5)
+    # resp = http_post(baseUrl+'/v1/api/slave',json=data, timeout=5)
     assert resp.status_code==200
     return resp
 
