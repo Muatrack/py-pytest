@@ -169,6 +169,7 @@ def test_http_api_slave_crud():
            assert item['name']==fakeSlave['name']
            assert item['pid']==fakeSlave['pid']
 
+
 @pytest.mark.repeat(1)
 @pytest.mark.http_api_itower_controller
 def test_http_api_discovery():
@@ -215,12 +216,21 @@ def test_http_api_power_switch():
         http_api_1_5_sw_on(item['id']); time.sleep(durationTs)      # 发起合闸            
         # assert swSt==True
 
+@pytest.mark.repeat(3)
+@pytest.mark.http_api_itower_controller
+def test_http_api_eco_switch():
+    """
+        控制器节能开/关控制
+    """
+    pass
+
+
 '''
 @pytest.mark.repeat(10)
 @pytest.mark.http_api_itower_controller
 def test_http_api_ac_switch():
     """
-        开关机循环
+        开关机循环 
         1. 删除所有设备
         2. 执行设备搜索、自动添加
         3. 查询设备列表
