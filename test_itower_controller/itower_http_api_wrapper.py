@@ -111,7 +111,6 @@ def slave_mgr_discovery():
     """ 请求控制器自动发现周边设备 """
     http_api_3_1()
 
-
 def slave_mgr_eco_st_set(sId:int, sw:bool):
     """ 采集器节能开启/关闭
         :param sId: 子设备id
@@ -119,3 +118,11 @@ def slave_mgr_eco_st_set(sId:int, sw:bool):
     """
     if sw==True: http_api_1_5(sId, Api5CtlCls.ECO_ON)
     else: http_api_1_5(sId, Api5CtlCls.ECO_OFF)
+
+def slave_mgr_power_st_set(sId:int, sw:bool):
+    """ 采集器电闸连通/断开
+        :param sId: 子设备id
+        :param sw:  True-连通电闸，False-断开电闸
+    """
+    if sw==True: http_api_1_5(sId, Api5CtlCls.SW_ON)
+    else: http_api_1_5(sId, Api5CtlCls.SW_OFF)
