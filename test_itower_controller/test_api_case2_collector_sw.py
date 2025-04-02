@@ -40,7 +40,7 @@ def test_http_api_power_switch():
         # 设置分合闸
         print(">>>>>>>>>> ", str(expectedSwSt))
         slave_mgr_power_st_set(sId, expectedSwSt)
-        time.sleep(3)
+        time.sleep(5)
         # 查询、验证电闸状态
         print("<<<<<<<<<< ", str(expectedSwSt))
         swSt = slave_mgr_is_pow_on(sId)
