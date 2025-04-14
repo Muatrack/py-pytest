@@ -1,7 +1,7 @@
 import pytest
-import requests
 import time
 import http_api_libs as gw
+import modbus_libs as mb
 
 httpd_header={'ookie': 'auth_key=Basic ZXNwMzI6NjY2ODg4'}
 
@@ -24,4 +24,7 @@ def test_modbus_tcp_access():
         测试modbus-tcp可访问性
     '''
 
-    
+    mbClient = mb.GwMB()
+    mbClient.connect()
+    time.sleep(1)
+    mbClient.read(1)
