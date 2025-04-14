@@ -12,7 +12,7 @@ def uart_handle():
     handle.open()
     return handle
 
-@pytest.fixture(scope="module")
+# @pytest.fixture(scope="module")
 @pytest.mark.usefixtures('uart_handle')
 def uart_close(uart_handle):
     yield

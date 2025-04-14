@@ -2,7 +2,7 @@ from pymodbus.client import ModbusTcpClient
 
 host="192.168.31.30"
 
-class GwMB:
+class _GwMB:
     def connect(self, host:str="192.168.31.30", port:int=502)->bool:
         self.host = host
         self.client = ModbusTcpClient(host=host)
@@ -26,3 +26,8 @@ class GwMB:
 
     def close(self):
         self.client.close()
+
+_client = _GwMB()
+
+def client_get():
+    return _client
