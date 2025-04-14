@@ -1,5 +1,5 @@
 import pytest
-from components.uart import uart
+from components.communication import uart
 
 performCounter = 0
 
