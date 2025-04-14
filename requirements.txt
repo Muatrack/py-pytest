@@ -15,3 +15,4 @@ rsa
 pymysql
 pyserial
 bleak
+pymodbus
