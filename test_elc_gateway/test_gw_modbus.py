@@ -2,7 +2,7 @@ import pytest
 import time
 import modbus_libs as mb
 
-host= "192.168.1.108"
+host= "192.168.1.110"
 port= 502
 gmbClient = None
 
