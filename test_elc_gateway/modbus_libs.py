@@ -12,11 +12,11 @@ class _GwMB:
             self._connected = False
             print("Fail to connect")
 
-    def read(self, slaveId:int=1)->list:
+    def read(self, slaveId:int=1, regAddr:int=0, regCounts:int=66)->list:
         if not self._connected:
             print("ModbusServer never connected")
             return []
-        rr = self.client.read_input_registers(address=0, count=66, slave=slaveId)
+        rr = self.client.read_input_registers(address=regAddr, count=regCounts, slave=slaveId)
         # for v in rr.registers:
         #     print(hex(v), end=" ")
         # print("\nlen:", len(rr.registers))
