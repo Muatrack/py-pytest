@@ -1,7 +1,5 @@
 from pymodbus.client import ModbusTcpClient
 
-host="192.168.31.30"
-
 class _GwMB:
     def connect(self, host:str="192.168.31.30", port:int=502)->bool:
         self.host = host

@@ -2,17 +2,18 @@ import pytest
 import time
 import modbus_libs as mb
 
-host= "192.168.31.30"
+host= "192.168.1.108"
 port= 502
 gmbClient = None
 
 @pytest.fixture(scope='module', autouse=True)
 def modbus_options():
+    global host
     print("\n[ modbus_options before yeild ]")
 
     global gmbClient
     gmbClient = mb.client_get()
-    gmbClient.connect()
+    gmbClient.connect(host=host)
 
     yield
     
