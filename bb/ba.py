@@ -1,2 +1,0 @@
-def fab():
-    print("fab")
