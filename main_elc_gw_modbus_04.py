@@ -2,6 +2,6 @@
 
 import pytest
 
-pytest.main(['-m', 'http_api_elc_gateway_modbus', '--repeat-scope=class', "--count=1000"])
+pytest.main(['-m', 'http_api_elc_gateway_modbus', '--repeat-scope=class', "--count=100000"])
 # pytest.main(['-vs', '-m', 'http_api_elc_gateway_modbus', '--repeat-scope=class', "--count=1000"])
 # pytest.main(['-xvs', '-m', 'http_api_elc_gateway_modbus', '--repeat-scope=class', "--count=1000"])
