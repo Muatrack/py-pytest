@@ -27,7 +27,10 @@ if __name__ == '__main__':
                         modbus_tcp_access_loop(host)
                 except Exception:
                         mb.client_get().close()
-                        time.sleep(5)
-                        gmbClient.connect(host='192.168.31.110')
-                        continue
+                        time.sleep(0.5)
+                        try:
+                                gmbClient.connect(host='192.168.31.110')
+                        except Exception:
+                                pass
+                continue
         mb.client_get().close()
