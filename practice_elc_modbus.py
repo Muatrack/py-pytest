@@ -1,6 +1,7 @@
 
 import math
 import components.protocol.modbus.modbus_tcp_libs as mb
+import time
 
 host = '192.168.31.110'
 gmbClient = 0
@@ -26,6 +27,7 @@ if __name__ == '__main__':
                         modbus_tcp_access_loop(host)
                 except Exception:
                         mb.client_get().close()
+                        time.sleep(5)
                         gmbClient.connect(host='192.168.31.110')
                         continue
         mb.client_get().close()
