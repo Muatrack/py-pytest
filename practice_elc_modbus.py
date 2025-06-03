@@ -3,9 +3,9 @@ import math
 import components.modbus.modbus_tcp_libs as mb
 
 host = '192.168.31.110'
-
+gmbClient = 0
 def modbus_tcp_access_loop(host:str=''):
-        gmbClient = mb.client_get()
+        global gmbClient
         gmbClient.connect(host=host)
         for slvId in range(1, 128):
                 rr = gmbClient.read(slvId, 0, 66)                
@@ -20,5 +20,8 @@ def modbus_tcp_access_loop(host:str=''):
         mb.client_get().close()
 
 if __name__ == '__main__':
+        
+        gmbClient = mb.client_get()
+        
         while(True):
                 modbus_tcp_access_loop(host)
