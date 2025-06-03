@@ -22,5 +22,10 @@ if __name__ == '__main__':
         gmbClient = mb.client_get()
         gmbClient.connect(host='192.168.31.110')
         while(True):
-                modbus_tcp_access_loop(host)
+                try:
+                        modbus_tcp_access_loop(host)
+                except Exception:
+                        mb.client_get().close()
+                        gmbClient.connect(host='192.168.31.110')
+                        continue
         mb.client_get().close()

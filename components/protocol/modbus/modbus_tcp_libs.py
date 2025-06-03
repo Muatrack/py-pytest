@@ -16,12 +16,8 @@ class _GwMB:
         if not self._connected:
             print("ModbusServer never connected")
             return []
-        try:
-            rr = self.client.read_input_registers(address=regAddr, count=regCounts, slave=slaveId)
-        except Exception:
-            rr = []
-        finally:
-            return rr.registers
+        rr = self.client.read_input_registers(address=regAddr, count=regCounts, slave=slaveId)
+        return rr.registers
 
     def close(self):
         self.client.close()
