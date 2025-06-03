@@ -15,10 +15,10 @@ if __name__ == '__main__':
 
     _platform.gatewaySelect("E10132E4952250A3")
     _platform.slaveSelect("150802DB9422015F")
-        
+
     while( True ):
 
         resp = _platform.slaveTrunOff()
-        time.sleep(5)
+        time.sleep(10)
         resp = _platform.slaveTrunOn()
-        time.sleep(5)
+        time.sleep(300)
