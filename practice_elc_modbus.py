@@ -1,6 +1,6 @@
 
 import math
-import components.modbus.modbus_tcp_libs as mb
+import components.protocol.modbus.modbus_tcp_libs as mb
 
 host = '192.168.31.110'
 gmbClient = 0
