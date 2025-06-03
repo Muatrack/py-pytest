@@ -5,7 +5,7 @@ import components.modbus.modbus_tcp_libs as mb
 host = '192.168.31.110'
 gmbClient = 0
 def modbus_tcp_access_loop(host:str=''):
-        global gmbClient        
+        global gmbClient
         for slvId in range(1, 128):
                 rr = gmbClient.read(slvId, 0, 66)                
                 if len(rr) !=66: 
@@ -16,7 +16,6 @@ def modbus_tcp_access_loop(host:str=''):
                 freq:int = int(rr[3]); freq=math.floor(freq / 100)
                 if freq<49 and freq>51: print(f"slvId:{slvId}, freq:{freq} ({rr[3]})")
 
-        mb.client_get().close()
 
 if __name__ == '__main__':
         
@@ -24,3 +23,4 @@ if __name__ == '__main__':
         gmbClient.connect(host='192.168.31.110')
         while(True):
                 modbus_tcp_access_loop(host)
+        mb.client_get().close()
