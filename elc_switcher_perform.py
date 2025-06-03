@@ -12,8 +12,12 @@ _httpClient = client.Client()
 _platform   = ElcPt.Platform(_httpClient)
 
 if __name__ == '__main__':
-    
-    while( True ):        
+
+    _platform.gatewaySelect("E10132E4952250A3")
+    _platform.slaveSelect("150802DB9422015F")
+        
+    while( True ):
+
         resp = _platform.slaveTrunOff()
         time.sleep(5)
         resp = _platform.slaveTrunOn()
