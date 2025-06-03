@@ -21,4 +21,4 @@ if __name__ == '__main__':
         resp = _platform.slaveTrunOff()
         time.sleep(10)
         resp = _platform.slaveTrunOn()
-        time.sleep(300)
+        time.sleep(30)
