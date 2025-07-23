@@ -1,5 +1,4 @@
 requests
-responses_validator
 websockets
 allure-pytest
 pytest
